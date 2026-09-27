@@ -34,27 +34,9 @@ app.get('/v1/models', (req, res) => {
     object: 'list',
     data: [
       {
-        id: 'meta/llama-3.1-405b-instruct',
+        id: 'z-ai/glm-5.3',
         object: 'model',
-        created: 1686935002,
-        owned_by: 'nvidia'
-      },
-      {
-        id: 'meta/llama-3.1-70b-instruct',
-        object: 'model',
-        created: 1686935002,
-        owned_by: 'nvidia'
-      },
-      {
-        id: 'meta/llama-3.1-8b-instruct',
-        object: 'model',
-        created: 1686935002,
-        owned_by: 'nvidia'
-      },
-      {
-        id: 'mistralai/mixtral-8x7b-instruct-v0.1',
-        object: 'model',
-        created: 1686935002,
+        created: Math.floor(Date.now() / 1000),
         owned_by: 'nvidia'
       }
     ]
