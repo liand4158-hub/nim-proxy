@@ -78,15 +78,14 @@ app.post('/v1/chat/completions', async (req, res) => {
     const nimModel = model || 'meta/llama-3.1-8b-instruct';
 
     // Build NVIDIA NIM request
-    const nimRequest = {
+    cconst nimRequest = {
   model: nimModel,
   messages: messages,
   temperature: temperature !== undefined ? temperature : 0.7,
   top_p: top_p !== undefined ? top_p : 1,
   max_tokens: max_tokens !== undefined ? max_tokens : 1024,
   stream: false,
-  reasoning_effort: reasoning_effort !== undefined ? reasoning_effort : 'low',
-  clear_thinking: true
+  reasoning_effort: reasoning_effort !== undefined ? reasoning_effort : 'low'
 };
 
     // Add optional parameters if provided
