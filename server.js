@@ -86,34 +86,19 @@ app.post('/v1/chat/completions', async (req, res) => {
 
     const nimUrl = 'https://integrate.api.nvidia.com/v1/chat/completions';
 
-    if (stream) {
-      // Streaming response
-      const response = await axios.post(nimUrl, nimRequest, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json',
-          'Accept': 'text/event-stream'
-        },
-        responseType: 'stream'
-      });
+    // Always use non-streaming mode for JanitorAI compatibility
+nimRequest.stream = false;
 
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
+const response = await axios.post(nimUrl, nimRequest, {
+  headers: {
+    'Authorization': `Bearer ${apiKey}`,
+    'Content-Type': 'application/json'
+  },
+  timeout: 120000
+});
 
-      response.data.pipe(res);
-    } else {
-      // Non-streaming response
-      const response = await axios.post(nimUrl, nimRequest, {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      // Return NVIDIA NIM response as-is (already in OpenAI format)
-      res.json(response.data);
-    }
+// Return NVIDIA NIM response as-is
+res.json(response.data);
   } catch (error) {
     console.error('Error proxying request:', error.message);
     
