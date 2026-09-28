@@ -53,6 +53,8 @@ app.post('/v1/chat/completions', async (req, res) => {
       });
     }
 
+    const apiKey = authHeader.substring(7);
+    
     const {
   messages,
   model,
