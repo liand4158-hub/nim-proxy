@@ -53,8 +53,17 @@ app.post('/v1/chat/completions', async (req, res) => {
       });
     }
 
-    const apiKey = authHeader.substring(7);
-    const { messages, model, stream, temperature, max_tokens, top_p, frequency_penalty, presence_penalty } = req.body;
+    const {
+  messages,
+  model,
+  stream,
+  temperature,
+  max_tokens,
+  top_p,
+  frequency_penalty,
+  presence_penalty,
+  reasoning_effort
+} = req.body;
 
     // Validate required fields
     if (!messages || !Array.isArray(messages)) {
@@ -68,13 +77,15 @@ app.post('/v1/chat/completions', async (req, res) => {
 
     // Build NVIDIA NIM request
     const nimRequest = {
-      model: nimModel,
-      messages: messages,
-      temperature: temperature !== undefined ? temperature : 0.7,
-      top_p: top_p !== undefined ? top_p : 1,
-      max_tokens: max_tokens !== undefined ? max_tokens : 1024,
-      stream: stream || false
-    };
+  model: nimModel,
+  messages: messages,
+  temperature: temperature !== undefined ? temperature : 0.7,
+  top_p: top_p !== undefined ? top_p : 1,
+  max_tokens: max_tokens !== undefined ? max_tokens : 1024,
+  stream: false,
+  reasoning_effort: reasoning_effort !== undefined ? reasoning_effort : 'low',
+  clear_thinking: true
+};
 
     // Add optional parameters if provided
     if (frequency_penalty !== undefined) {
