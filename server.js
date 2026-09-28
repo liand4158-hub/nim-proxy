@@ -78,7 +78,7 @@ app.post('/v1/chat/completions', async (req, res) => {
     const nimModel = model || 'meta/llama-3.1-8b-instruct';
 
     // Build NVIDIA NIM request
-    cconst nimRequest = {
+    const nimRequest = {
   model: nimModel,
   messages: messages,
   temperature: temperature !== undefined ? temperature : 0.7,
