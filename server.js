@@ -2,7 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 
 // CORS middleware
 app.use((req, res, next) => {
