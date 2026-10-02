@@ -104,7 +104,7 @@ const response = await axios.post(nimUrl, nimRequest, {
     'Authorization': `Bearer ${apiKey}`,
     'Content-Type': 'application/json'
   },
-  timeout: 300000
+  timeout: 120000
 });
 
 // Return NVIDIA NIM response as-is
