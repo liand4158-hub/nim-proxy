@@ -55,7 +55,18 @@ app.post('/v1/chat/completions', async (req, res) => {
 
     const apiKey = authHeader.substring(7);
     
-    console.log('JanitorAI request:', {
+const {
+  messages,
+  model,
+  stream,
+  temperature,
+  max_tokens,
+  top_p,
+  frequency_penalty,
+  presence_penalty
+} = req.body;
+
+console.log('JanitorAI request:', {
   model,
   messageCount: messages?.length,
   stream,
@@ -66,6 +77,13 @@ app.post('/v1/chat/completions', async (req, res) => {
   presence_penalty,
   approxChars: JSON.stringify(messages || []).length
 });
+
+// Validate required fields
+if (!messages || !Array.isArray(messages)) {
+  return res.status(400).json({ 
+    error: { message: 'Messages array is required', type: 'invalid_request_error' }
+  });
+}
 
     // Validate required fields
     if (!messages || !Array.isArray(messages)) {
