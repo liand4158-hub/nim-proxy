@@ -78,13 +78,6 @@ console.log('JanitorAI request:', {
   approxChars: JSON.stringify(messages || []).length
 });
 
-// Validate required fields
-if (!messages || !Array.isArray(messages)) {
-  return res.status(400).json({ 
-    error: { message: 'Messages array is required', type: 'invalid_request_error' }
-  });
-}
-
     // Validate required fields
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ 
