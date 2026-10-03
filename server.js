@@ -118,60 +118,40 @@ if (!messages || !Array.isArray(messages)) {
     // Always use non-streaming mode for JanitorAI compatibility
 nimRequest.stream = false;
 
-const response = await axios.post(nimUrl, nimRequest, {
-  headers: {
-    'Authorization': `Bearer ${apiKey}`,
-    'Content-Type': 'application/json'
-  },
-  timeout: 120000
-});
+const nimStart = Date.now();
 
-// Return NVIDIA NIM response as-is
-res.json(response.data);
-  } catch (error) {
-    console.error('Error proxying request:', error.message);
-    
-    if (error.response) {
-      // Forward NVIDIA NIM error response
-      return res.status(error.response.status).json(error.response.data);
+console.log('Sending request to NVIDIA NIM...');
+
+try {
+  const response = await axios.post(nimUrl, nimRequest, {
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json'
+    },
+    timeout: 120000
+  });
+
+  console.log(`NVIDIA NIM responded in ${Date.now() - nimStart}ms`);
+
+  res.json(response.data);
+
+} catch (error) {
+  console.error(
+    `NVIDIA NIM request failed after ${Date.now() - nimStart}ms:`,
+    error.message
+  );
+
+  if (error.response) {
+    return res.status(error.response.status).json(error.response.data);
+  }
+
+  res.status(500).json({
+    error: {
+      message: error.message || 'Internal server error',
+      type: 'server_error'
     }
-    
-    // Generic error response
-    res.status(500).json({ 
-      error: { 
-        message: error.message || 'Internal server error', 
-        type: 'server_error' 
-      }
-    });
-  }
-});
-
-// Completions endpoint (legacy, redirects to chat completions)
-app.post('/v1/completions', async (req, res) => {
-  try {
-    const { prompt, ...otherParams } = req.body;
-    
-    // Convert prompt to messages format
-    const messages = [{ role: 'user', content: prompt }];
-    
-    // Forward to chat completions endpoint
-    req.body = {
-      messages,
-      ...otherParams
-    };
-    
-    return app._router.handle(
-      { ...req, url: '/v1/chat/completions', method: 'POST' },
-      res
-    );
-  } catch (error) {
-    res.status(500).json({ 
-      error: { 
-        message: error.message || 'Internal server error', 
-        type: 'server_error' 
-      }
-    });
-  }
+  });
+}
 });
 
 // Error handling middleware
