@@ -75,8 +75,12 @@ console.log('JanitorAI request:', {
   top_p,
   frequency_penalty,
   presence_penalty,
-  approxChars: JSON.stringify(messages || []).length
-});
+  approxChars: JSON.stringify(messages || []).length,
+messageSizes: (messages || []).map((m, i) => ({
+  index: i,
+  role: m.role,
+  chars: typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content || '').length
+}))
 
     // Validate required fields
     if (!messages || !Array.isArray(messages)) {
