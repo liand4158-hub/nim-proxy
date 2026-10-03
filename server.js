@@ -76,18 +76,24 @@ console.log('JanitorAI request:', {
   frequency_penalty,
   presence_penalty,
   approxChars: JSON.stringify(messages || []).length,
-messageSizes: (messages || []).map((m, i) => ({
-  index: i,
-  role: m.role,
-  chars: typeof m.content === 'string' ? m.content.length : JSON.stringify(m.content || '').length
-}))
+  messageSizes: (messages || []).map((m, i) => ({
+    index: i,
+    role: m.role,
+    chars: typeof m.content === 'string'
+      ? m.content.length
+      : JSON.stringify(m.content || '').length
+  }))
+});
 
-    // Validate required fields
-    if (!messages || !Array.isArray(messages)) {
-      return res.status(400).json({ 
-        error: { message: 'Messages array is required', type: 'invalid_request_error' }
-      });
+// Validate required fields
+if (!messages || !Array.isArray(messages)) {
+  return res.status(400).json({
+    error: {
+      message: 'Messages array is required',
+      type: 'invalid_request_error'
     }
+  });
+}
 
     // Default model if not specified
     const nimModel = model || 'meta/llama-3.1-8b-instruct';
